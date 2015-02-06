@@ -1,0 +1,186 @@
+---
+ title: Guestbook
+ markdown2extras: wiki-tables, fenced-code-blocks
+---
+
+# Guestbook REST API
+
+This server is responsible for communicating with the database, calendar server provider, mail transfer agent, and chat service. It exposes an HTTP API for the iOS client to use, as well as a web-based interface for receptionists that shows upcoming meetings and allows historical report generation.
+
+# Getting Started
+
+The Guestbook server exposes a JSON REST API over HTTP.
+
+## Authentication
+
+HTTP clients authenticate themselves to the server using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication). It's highly insecure.
+
+Clients must send the `Authorization: Basic` header on each request. For brevity, this header is excluded from the examples below.
+
+# Visits
+
+A Visit is when a person arrives at Blue Jeans to see a certain host employee. If multiple visitors arrive together, that counts as multiple Visits.
+
+```json
+{
+    "id": "54d47e4e32f9bfe44ea4b5a6",
+    "visitorName": "John Chambers",
+    "visitorCompany": "Cisco",
+	"hostName": "Krish Ramakrishnan",
+	"hostId": "52000fdc0ae92a67ee80f902",
+	"startTime": 1423210617000
+}
+```
+
+**id** is the primary key of the persisted entity. It cannot be set by clients.
+
+**visitorName** is the full name of the guest who has arrived at Blue Jeans.
+
+**visitorCompany** is the name of the company that the visitor represents.
+
+**hostName** is the full name of the Blue Jeans employee that is being visited.
+
+**hostId** is the host employee's ID in the Floorplan database (`http://floorplan.bluejeansnet.com/floorplan/people/:id`).
+
+**startTime** is the timestamp, in milliseconds since 1970-01-01T00:00:00Z, when the visitor signed in.
+
+## insertVisit (POST /api/visits/)
+
+Create a new record of a visitor signing in at the front desk. Side effects include sending an email and a HipChat message to the host, letting them know that their guest has arrived.
+
+### Inputs
+
+`Content-Type: application/json`
+
+||**where**||**name**||**type**||**description**||**example**||
+||body||visit||[Visit](#visits)||the server will assign an `id` and `startTime`, so send `null`||see Example Request below||
+
+### Outputs
+
+`Content-Type: application/json`
+
+The response will be the same Visit entity, except the `id` and `startTime` values will have been filled in by the server.
+
+### Example Request
+
+```json
+POST /api/visits/
+Content-Type: application/json
+
+{
+    "visitorName": "John Chambers",
+	"visitorCompany": "Cisco",
+	"hostName": "Krish Ramakrishnan",
+	"hostId": "52000fdc0ae92a67ee80f902",
+}
+```
+
+### Example Response
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": "54d47e4e32f9bfe44ea4b5a6",
+	"visitorName": "John Chambers",
+	"visitorCompany": "Cisco",
+	"hostName": "Krish Ramakrishnan",
+	"hostId": "52000fdc0ae92a67ee80f902",
+	"startTime": 1423210617000
+}
+```
+
+## getVisitsCSV (GET /api/visits/csv)
+
+### Inputs
+
+none
+
+### Outputs
+
+`Content-Type: text/csv`
+
+A comma-separated spreadsheet containing all Visits, sorted in descending `startTime` order.
+
+### Example Request
+
+```
+GET /api/visits/csv
+```
+
+### Example Response
+
+```
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Disposition: attachment; filename=visits.csv
+
+startTime,visitorName,visitorCompany,hostName
+"2/6/15 1:31 a","John Chambers","Cisco","Krish Ramakrishnan"
+```
+
+# Meetings
+
+A meeting is an event scheduled on a room resource calendar. This entity definition comes straight from [Catalyst](https://c.bjn.mobi/docs/Meeting.html), and Guestbook proxies these requests to the Catalyst API.
+
+```json
+{
+    "calendarEventId": "aackik07sucq77q6mqa2up1cso",
+	"calendarType": "GOOGLE",
+	"cluster": "PROD",
+	"description": "Join my meeting using https://bluejeans.com/10990/0000",
+	"endTime": 1415915770274,
+	"endpointIds": [ "52594b8a03a06a5062934fa3" ],
+	"id": "539837779bab9338fa9a6a3e",
+	"meetingId": "10990",
+	"organizer": "ben@bluejeansnet.com",
+	"passcode": "0000",
+	"startTime": 1415912170274,
+	"title": "My Personal Meeting"
+}
+```
+
+## getMeetings (GET /api/meetings)
+
+Returns a list of today's scheduled meetings for all Endpoints in the Mountain View office, filtered by `startTime` (meetings are ignored if they ended more than 30 minutes ago, or start more than 1 hour in the future).
+
+### Inputs
+
+none
+
+### Outputs
+
+`Content-Type: application/json`
+
+A list of [Meeting](#meetings) objects.
+
+### Example Request
+
+```
+GET /api/meetings
+```
+
+### Example Response
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "calendarEventId": "aackik07sucq77q6mqa2up1cso",
+		"calendarType": "GOOGLE",
+		"cluster": "PROD",
+		"description": "Join my meeting using https://bluejeans.com/10990/0000",
+		"endTime": 1415915770274,
+		"endpointIds": [ "52594b8a03a06a5062934fa3" ],
+		"id": "539837779bab9338fa9a6a3e",
+		"meetingId": "10990",
+		"organizer": "ben@bluejeansnet.com",
+		"passcode": "0000",
+		"startTime": 1415912170274,
+		"title": "My Personal Meeting"
+    }
+]
+```

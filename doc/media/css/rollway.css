@@ -1,0 +1,128 @@
+body {
+	background : #e5e5e5;
+	font-family: Helvetica, Helvetica LT Std, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif;
+	margin     : 0;
+}
+
+#header, #sidebar {
+	width: 280px;
+}
+
+#header {
+	background: rgb(37,35,48);
+	position  : fixed;
+}
+
+#header h1 {
+	height     : 40px;
+	margin     : 16px auto 10px;
+	padding    : 0;
+	text-indent: -100000px;
+	width      : 144px;;
+}
+
+#sidebar {
+	padding-left : 0;
+	padding-right: 0;
+	position     : fixed;
+}
+
+#sidebar li div {
+	transition        : background-color 0.2s;
+	-webkit-transition: background-color 0.2s;
+	-moz-transition   : background-color 0.2s;
+	background        : transparent none;
+}
+
+#sidebar li div.current, #sidebar li div:hover {
+	background: rgba(37,35,48,0.67) none;
+}
+
+#sidebar li, #sidebar li a { 
+	color: rgb(37,35,48);
+}
+
+#sidebar li div.current a, #sidebar li div:hover a {
+	color: #dcd9d7;
+}
+
+#sidebar li span.method, #sidebar>ul>li div a {
+	display: block;
+}
+
+#sidebar ul {
+	margin-left : 0;
+	margin-right: 0;
+}
+
+#sidebar>ul>li div {
+	padding-left: 30px;
+}
+
+#sidebar>ul ul>li>div {
+	padding-left: 46px;
+}
+
+#content {
+	padding-left: 310px;
+	position    : static;
+}
+
+#sidebar, .intro {
+	background-color: #c9c8cf;
+}
+
+#content h1:first-child {
+	display: none;
+}
+
+#content span.both .endpoint {
+	color: rgba(0, 0, 0, 0.55);
+}
+
+tbody tr:nth-child(2n+1), code {
+	background-color: hsla(0, 0%, 100%, 0.4);
+}
+
+pre {
+	background-color: #252330;
+	border          : none;
+	border-radius   : 3px;
+	color           : #CFBFAD;
+	/*background-color: rgba(37,35,48,0.67);*/
+	/*color: white;*/
+}
+
+h3 {
+	margin-left: 8px;
+}
+
+#content h1, #content h2 {
+	border-color: rgba(37,35,48,0.67);
+}
+
+#content h2 {
+	margin-top         : 57px;
+	border-bottom-style: solid;
+}
+
+#content p, #content table, #content pre {
+	margin-left: 24px;
+}
+
+table {
+	border-left : 1px solid #aaaaaa;
+	border-right: 1px solid #aaaaaa;
+}
+
+pre code {
+	background: none;
+}
+
+h1, h2, h3, strong {
+	color: rgb(37,35,48);
+}
+
+ul {
+	margin-left: 57px;
+}

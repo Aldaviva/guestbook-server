@@ -1,0 +1,7 @@
+{
+  "endpoints": [
+    "POST   /api/visits/",
+    "GET    /api/visits/csv",
+    "GET    /api/meetings"
+  ]
+}

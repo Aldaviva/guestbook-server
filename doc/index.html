@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Guestbook</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="media/css/restdown.css">
+    <link rel="stylesheet" type="text/css" href="media/css/rollway.css">
+    <link rel="stylesheet" type="text/css" href="media/css/inkpot.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+</head>
+<body>
+<div id="header">
+    <h1>Guestbook</h1>
+</div>
+
+    <div id="sidebar">
+<ul>
+  <li><div><a href="#getting-started">Getting Started</a></div>
+  <ul>
+    <li><div><a href="#authentication">Authentication</a></div></li>
+  </ul></li>
+  <li><div><a href="#visits">Visits</a></div>
+  <ul>
+    <li><div><a href="#insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/api/visits/</span>)</span></span></a></div></li>
+    <li><div><a href="#getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/visits/csv</span>)</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#meetings">Meetings</a></div>
+  <ul>
+    <li><div><a href="#getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/meetings</span>)</span></span></a></div></li>
+  </ul></li>
+</ul>
+
+    </div>
+    <div id="content">
+
+<h1>Guestbook REST API</h1>
+<div class="intro">
+
+
+<p>This server is responsible for communicating with the database, calendar server provider, mail transfer agent, and chat service. It exposes an HTTP API for the iOS client to use, as well as a web-based interface for receptionists that shows upcoming meetings and allows historical report generation.</p>
+
+
+</div>
+<h1 id="getting-started">Getting Started</h1>
+
+<p>The Guestbook server exposes a JSON REST API over HTTP.</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>HTTP clients authenticate themselves to the server using <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Authentication</a>. It's highly insecure.</p>
+
+<p>Clients must send the <code>Authorization: Basic</code> header on each request. For brevity, this header is excluded from the examples below.</p>
+
+<h1 id="visits">Visits</h1>
+
+<p>A Visit is when a person arrives at Blue Jeans to see a certain host employee. If multiple visitors arrive together, that counts as multiple Visits.</p>
+
+<div class="codehilite"><pre><code><span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1423210617000</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>id</strong> is the primary key of the persisted entity. It cannot be set by clients.</p>
+
+<p><strong>visitorName</strong> is the full name of the guest who has arrived at Blue Jeans.</p>
+
+<p><strong>visitorCompany</strong> is the name of the company that the visitor represents.</p>
+
+<p><strong>hostName</strong> is the full name of the Blue Jeans employee that is being visited.</p>
+
+<p><strong>hostId</strong> is the host employee's ID in the Floorplan database (<code>http://floorplan.bluejeansnet.com/floorplan/people/:id</code>).</p>
+
+<p><strong>startTime</strong> is the timestamp, in milliseconds since 1970-01-01T00:00:00Z, when the visitor signed in.</p>
+
+<h2 id="insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/api/visits/</span>)</span></span></h2>
+
+<p>Create a new record of a visitor signing in at the front desk. Side effects include sending an email and a HipChat message to the host, letting them know that their guest has arrived.</p>
+
+<h3 id="inputs">Inputs</h3>
+
+<p><code>Content-Type: application/json</code></p>
+
+<table>
+<tbody>
+<tr><td><strong>where</strong></td><td><strong>name</strong></td><td><strong>type</strong></td><td><strong>description</strong></td><td><strong>example</strong></td></tr>
+<tr><td>body</td><td>visit</td><td><a href="#visits">Visit</a></td><td>the server will assign an <code>id</code> and <code>startTime</code>, so send <code>null</code></td><td>see Example Request below</td></tr>
+</tbody>
+</table>
+
+<h3 id="outputs">Outputs</h3>
+
+<p><code>Content-Type: application/json</code></p>
+
+<p>The response will be the same Visit entity, except the <code>id</code> and <code>startTime</code> values will have been filled in by the server.</p>
+
+<h3 id="example-request">Example Request</h3>
+
+<div class="codehilite"><pre><code><span class="err">POST</span> <span class="err">/api/visits/</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="example-response">Example Response</h3>
+
+<div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1423210617000</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/visits/csv</span>)</span></span></h2>
+
+<h3 id="inputs-2">Inputs</h3>
+
+<p>none</p>
+
+<h3 id="outputs-2">Outputs</h3>
+
+<p><code>Content-Type: text/csv</code></p>
+
+<p>A comma-separated spreadsheet containing all Visits, sorted in descending <code>startTime</code> order.</p>
+
+<h3 id="example-request-2">Example Request</h3>
+
+<pre><code>GET /api/visits/csv
+</code></pre>
+
+<h3 id="example-response-2">Example Response</h3>
+
+<pre><code>HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Disposition: attachment; filename=visits.csv
+
+startTime,visitorName,visitorCompany,hostName
+"2/6/15 1:31 a","John Chambers","Cisco","Krish Ramakrishnan"
+</code></pre>
+
+<h1 id="meetings">Meetings</h1>
+
+<p>A meeting is an event scheduled on a room resource calendar. This entity definition comes straight from <a href="https://c.bjn.mobi/docs/Meeting.html">Catalyst</a>, and Guestbook proxies these requests to the Catalyst API.</p>
+
+<div class="codehilite"><pre><code><span class="p">{</span>
+    <span class="nt">&quot;calendarEventId&quot;</span><span class="p">:</span> <span class="s2">&quot;aackik07sucq77q6mqa2up1cso&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;calendarType&quot;</span><span class="p">:</span> <span class="s2">&quot;GOOGLE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;cluster&quot;</span><span class="p">:</span> <span class="s2">&quot;PROD&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Join my meeting using https://bluejeans.com/10990/0000&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;endTime&quot;</span><span class="p">:</span> <span class="mi">1415915770274</span><span class="p">,</span>
+    <span class="nt">&quot;endpointIds&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;52594b8a03a06a5062934fa3&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;539837779bab9338fa9a6a3e&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;meetingId&quot;</span><span class="p">:</span> <span class="s2">&quot;10990&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;organizer&quot;</span><span class="p">:</span> <span class="s2">&quot;ben@bluejeansnet.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;passcode&quot;</span><span class="p">:</span> <span class="s2">&quot;0000&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1415912170274</span><span class="p">,</span>
+    <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;My Personal Meeting&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/meetings</span>)</span></span></h2>
+
+<p>Returns a list of today's scheduled meetings for all Endpoints in the Mountain View office, filtered by <code>startTime</code> (meetings are ignored if they ended more than 30 minutes ago, or start more than 1 hour in the future).</p>
+
+<h3 id="inputs-3">Inputs</h3>
+
+<p>none</p>
+
+<h3 id="outputs-3">Outputs</h3>
+
+<p><code>Content-Type: application/json</code></p>
+
+<p>A list of <a href="#meetings">Meeting</a> objects.</p>
+
+<h3 id="example-request-3">Example Request</h3>
+
+<pre><code>GET /api/meetings
+</code></pre>
+
+<h3 id="example-response-3">Example Response</h3>
+
+<div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;calendarEventId&quot;</span><span class="p">:</span> <span class="s2">&quot;aackik07sucq77q6mqa2up1cso&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;calendarType&quot;</span><span class="p">:</span> <span class="s2">&quot;GOOGLE&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;cluster&quot;</span><span class="p">:</span> <span class="s2">&quot;PROD&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Join my meeting using https://bluejeans.com/10990/0000&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;endTime&quot;</span><span class="p">:</span> <span class="mi">1415915770274</span><span class="p">,</span>
+        <span class="nt">&quot;endpointIds&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;52594b8a03a06a5062934fa3&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;539837779bab9338fa9a6a3e&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;meetingId&quot;</span><span class="p">:</span> <span class="s2">&quot;10990&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;organizer&quot;</span><span class="p">:</span> <span class="s2">&quot;ben@bluejeansnet.com&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;passcode&quot;</span><span class="p">:</span> <span class="s2">&quot;0000&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1415912170274</span><span class="p">,</span>
+        <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;My Personal Meeting&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+
+    </div> <!-- #content -->
+<script type="text/javascript" charset="utf-8">
+$(function() {
+    var headerHeight = 0; //$("#header").height();
+
+    var sections = $("#content h1[id], #content h2[id]");
+    var sectionOffsets = [];
+    var slack = 100;  // Give the section scroll some slack (in pixels).
+    sections.each(function(elem) {
+        sectionOffsets.push($(this).offset().top - headerHeight - slack);
+    });
+
+    var currSectionIdx = -1;
+    function getSectionIdx(scrollDistance) {
+        if (scrollDistance < sectionOffsets[0]) {
+            return -1;
+        } else {
+            for (var id = sectionOffsets.length; id > 0; id--) {
+                if (scrollDistance > sectionOffsets[id - 1]) {
+                    return id - 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    /** {{{ http://code.activestate.com/recipes/577787/ (r2) */
+    _slugify_strip_re = /[^\w\s-]/g;
+    _slugify_hyphenate_re = /[-\s]+/g;
+    function slugify(s) {
+      s = s.replace(_slugify_strip_re, '').trim().toLowerCase();
+      s = s.replace(_slugify_hyphenate_re, '-');
+      return s;
+    }
+    /** end of http://code.activestate.com/recipes/577787/ }}} */
+
+    /* See <https://github.com/trentm/restdown/issues/11>. */
+    function safechars(s) {
+      return s.replace(_slugify_strip_re, '');
+    }
+
+    var onScroll = function() {
+        var scrollDistance = window.scrollY;
+        var sectionIdx = getSectionIdx(scrollDistance);
+
+        if (sectionIdx !== currSectionIdx) {
+            $("#sidebar li>div").removeClass("current");
+            currSectionIdx = sectionIdx;
+            if (currSectionIdx >= 0) {
+                var heading = $(sections[currSectionIdx]).text();
+                var possibleAnchors = [
+                    slugify(heading), // h1 or non-method h2
+                    heading.replace(/ /g, '-'), // h2 method, just name or just endpoint
+                    heading.slice(0, heading.lastIndexOf(' (')).trim().replace(/ /g, '-'), // h2 method, name and endpoint
+                ];
+                for (var i=0; i < possibleAnchors.length; i++) {
+                    var anchor = safechars(possibleAnchors[i]);
+                    // try {
+                        $("#sidebar a[href=#" + anchor + "]").parent().addClass("current");
+                    // } catch (e) {
+                        /* Ignore error if no such element. */
+                        // console.log(e)
+                    // }
+                }
+            }
+        }
+    };
+
+    $(window).scroll(onScroll);
+    onScroll();
+});
+</script>
+
+</body>
+</html>

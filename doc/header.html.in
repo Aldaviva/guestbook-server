@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>%(title)s</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="%(mediaroot)s/css/restdown.css">
+    <link rel="stylesheet" type="text/css" href="%(mediaroot)s/css/rollway.css">
+    <link rel="stylesheet" type="text/css" href="%(mediaroot)s/css/inkpot.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+</head>
+<body>
+<div id="header">
+    <h1>%(title)s</h1>
+</div>

@@ -1,0 +1,29 @@
+{
+	"name": "guestbook-server",
+	"version": "0.0.0",
+	"author": "Ben Hutchison <ben@bluejeans.com>",
+	"description": "Front desk sign-in backend server.",
+	"repository":{
+		"type": "git",
+		"url": "https://github.com/Aldaviva/guestbook-server.git"
+	},
+	"homepage": "https://github.com/Aldaviva/guestbook-server",
+	"dependencies": {
+		"bunyan"          : "1.3.3",
+		"cache-manager"   : "0.17.0",
+		"hipchatter"      : "0.2.0",
+		"less-middleware" : "1.0.4",
+		"lodash"          : "3.1.0",
+		"mediator-js"     : "0.9.8",
+		"mongoose"        : "3.8.22",
+		"mongoose-moment" : "0.0.1",
+		"mongoose-q"      : "0.0.13",
+		"nodemailer"      : "1.3.0",
+		"passport"        : "0.2.1",
+		"passport-http"   : "0.2.2",
+		"passport-google" : "0.3.0",
+		"pr-request2"     : "git://github.com/aldaviva/pr-request2.git#e714437d0abc58d645028231f095196c4c1ae911",
+		"q"               : "1.1.2",
+		"restify"         : "2.8.5"
+	}
+}

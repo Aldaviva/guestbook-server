@@ -1,2 +1,5 @@
 ncore*
 node_modules
+config.json
+.pid
+*.sublime-*

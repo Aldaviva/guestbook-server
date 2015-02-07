@@ -1,0 +1,21 @@
+{
+    "auth": {
+        "admins": [ "admin@email.com" ]
+    },
+    "cache": {
+        "ttl": 10
+    },
+    "db": {
+        "url": "mongodb://localhost/guestbook"
+    },
+    "floorplan": {
+        "baseUrl": "http://floorplan.bluejeansnet.com/floorplan"
+    },
+    "httpServer": {
+        "port": 8080,
+        "baseUrl": "http://example.com:8080"
+    },
+    "smtp": {
+        "host": "127.0.0.1"
+    }
+}

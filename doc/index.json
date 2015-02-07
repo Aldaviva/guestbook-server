@@ -1,7 +1,7 @@
 {
   "endpoints": [
-    "POST   /api/visits/",
-    "GET    /api/visits/csv",
-    "GET    /api/meetings"
+    "POST   /cgi-bin/visits/",
+    "GET    /cgi-bin/visits/visits.csv",
+    "GET    /cgi-bin/meetings"
   ]
 }

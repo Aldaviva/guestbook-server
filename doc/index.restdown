@@ -23,7 +23,7 @@ A Visit is when a person arrives at Blue Jeans to see a certain host employee. I
 
 ```json
 {
-    "id": "54d47e4e32f9bfe44ea4b5a6",
+    "_id": "54d47e4e32f9bfe44ea4b5a6",
     "visitorName": "John Chambers",
     "visitorCompany": "Cisco",
 	"hostName": "Krish Ramakrishnan",
@@ -32,7 +32,7 @@ A Visit is when a person arrives at Blue Jeans to see a certain host employee. I
 }
 ```
 
-**id** is the primary key of the persisted entity. It cannot be set by clients.
+**_id** is the primary key of the persisted entity. It cannot be set by clients.
 
 **visitorName** is the full name of the guest who has arrived at Blue Jeans.
 
@@ -44,7 +44,7 @@ A Visit is when a person arrives at Blue Jeans to see a certain host employee. I
 
 **startTime** is the timestamp, in milliseconds since 1970-01-01T00:00:00Z, when the visitor signed in.
 
-## insertVisit (POST /api/visits/)
+## insertVisit (POST /cgi-bin/visits/)
 
 Create a new record of a visitor signing in at the front desk. Side effects include sending an email and a HipChat message to the host, letting them know that their guest has arrived.
 
@@ -53,25 +53,25 @@ Create a new record of a visitor signing in at the front desk. Side effects incl
 `Content-Type: application/json`
 
 ||**where**||**name**||**type**||**description**||**example**||
-||body||visit||[Visit](#visits)||the server will assign an `id` and `startTime`, so send `null`||see Example Request below||
+||body||visit||[Visit](#visits)||the server will assign an `_id` and `startTime`, so send `null`||see Example Request below||
 
 ### Outputs
 
 `Content-Type: application/json`
 
-The response will be the same Visit entity, except the `id` and `startTime` values will have been filled in by the server.
+The response will be the same Visit entity, except the `_id` and `startTime` values will have been filled in by the server.
 
 ### Example Request
 
 ```json
-POST /api/visits/
+POST /cgi-bin/visits/
 Content-Type: application/json
 
 {
     "visitorName": "John Chambers",
 	"visitorCompany": "Cisco",
 	"hostName": "Krish Ramakrishnan",
-	"hostId": "52000fdc0ae92a67ee80f902",
+	"hostId": "52000fdc0ae92a67ee80f902"
 }
 ```
 
@@ -82,7 +82,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "id": "54d47e4e32f9bfe44ea4b5a6",
+    "_id": "54d47e4e32f9bfe44ea4b5a6",
 	"visitorName": "John Chambers",
 	"visitorCompany": "Cisco",
 	"hostName": "Krish Ramakrishnan",
@@ -91,7 +91,7 @@ Content-Type: application/json
 }
 ```
 
-## getVisitsCSV (GET /api/visits/csv)
+## getVisitsCSV (GET /cgi-bin/visits/visits.csv)
 
 ### Inputs
 
@@ -106,7 +106,7 @@ A comma-separated spreadsheet containing all Visits, sorted in descending `start
 ### Example Request
 
 ```
-GET /api/visits/csv
+GET /cgi-bin/visits/visits.csv
 ```
 
 ### Example Response
@@ -141,7 +141,7 @@ A meeting is an event scheduled on a room resource calendar. This entity definit
 }
 ```
 
-## getMeetings (GET /api/meetings)
+## getMeetings (GET /cgi-bin/meetings)
 
 Returns a list of today's scheduled meetings for all Endpoints in the Mountain View office, filtered by `startTime` (meetings are ignored if they ended more than 30 minutes ago, or start more than 1 hour in the future).
 
@@ -158,7 +158,7 @@ A list of [Meeting](#meetings) objects.
 ### Example Request
 
 ```
-GET /api/meetings
+GET /cgi-bin/meetings
 ```
 
 ### Example Response

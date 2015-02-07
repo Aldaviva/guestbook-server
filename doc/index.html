@@ -22,12 +22,12 @@
   </ul></li>
   <li><div><a href="#visits">Visits</a></div>
   <ul>
-    <li><div><a href="#insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/api/visits/</span>)</span></span></a></div></li>
-    <li><div><a href="#getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/visits/csv</span>)</span></span></a></div></li>
+    <li><div><a href="#insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/cgi-bin/visits/</span>)</span></span></a></div></li>
+    <li><div><a href="#getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/visits.csv</span>)</span></span></a></div></li>
   </ul></li>
   <li><div><a href="#meetings">Meetings</a></div>
   <ul>
-    <li><div><a href="#getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/meetings</span>)</span></span></a></div></li>
+    <li><div><a href="#getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/meetings</span>)</span></span></a></div></li>
   </ul></li>
 </ul>
 
@@ -57,7 +57,7 @@
 <p>A Visit is when a person arrives at Blue Jeans to see a certain host employee. If multiple visitors arrive together, that counts as multiple Visits.</p>
 
 <div class="codehilite"><pre><code><span class="p">{</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;_id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
     <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
     <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
     <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
@@ -66,7 +66,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p><strong>id</strong> is the primary key of the persisted entity. It cannot be set by clients.</p>
+<p><strong>_id</strong> is the primary key of the persisted entity. It cannot be set by clients.</p>
 
 <p><strong>visitorName</strong> is the full name of the guest who has arrived at Blue Jeans.</p>
 
@@ -78,7 +78,7 @@
 
 <p><strong>startTime</strong> is the timestamp, in milliseconds since 1970-01-01T00:00:00Z, when the visitor signed in.</p>
 
-<h2 id="insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/api/visits/</span>)</span></span></h2>
+<h2 id="insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/cgi-bin/visits/</span>)</span></span></h2>
 
 <p>Create a new record of a visitor signing in at the front desk. Side effects include sending an email and a HipChat message to the host, letting them know that their guest has arrived.</p>
 
@@ -89,7 +89,7 @@
 <table>
 <tbody>
 <tr><td><strong>where</strong></td><td><strong>name</strong></td><td><strong>type</strong></td><td><strong>description</strong></td><td><strong>example</strong></td></tr>
-<tr><td>body</td><td>visit</td><td><a href="#visits">Visit</a></td><td>the server will assign an <code>id</code> and <code>startTime</code>, so send <code>null</code></td><td>see Example Request below</td></tr>
+<tr><td>body</td><td>visit</td><td><a href="#visits">Visit</a></td><td>the server will assign an <code>_id</code> and <code>startTime</code>, so send <code>null</code></td><td>see Example Request below</td></tr>
 </tbody>
 </table>
 
@@ -97,18 +97,18 @@
 
 <p><code>Content-Type: application/json</code></p>
 
-<p>The response will be the same Visit entity, except the <code>id</code> and <code>startTime</code> values will have been filled in by the server.</p>
+<p>The response will be the same Visit entity, except the <code>_id</code> and <code>startTime</code> values will have been filled in by the server.</p>
 
 <h3 id="example-request">Example Request</h3>
 
-<div class="codehilite"><pre><code><span class="err">POST</span> <span class="err">/api/visits/</span>
+<div class="codehilite"><pre><code><span class="err">POST</span> <span class="err">/cgi-bin/visits/</span>
 <span class="err">Content-Type:</span> <span class="err">application/json</span>
 
 <span class="p">{</span>
     <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
     <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
     <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -118,7 +118,7 @@
 <span class="err">Content-Type:</span> <span class="err">application/json</span>
 
 <span class="p">{</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;_id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
     <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
     <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
     <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
@@ -127,7 +127,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/visits/csv</span>)</span></span></h2>
+<h2 id="getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/visits.csv</span>)</span></span></h2>
 
 <h3 id="inputs-2">Inputs</h3>
 
@@ -141,7 +141,7 @@
 
 <h3 id="example-request-2">Example Request</h3>
 
-<pre><code>GET /api/visits/csv
+<pre><code>GET /cgi-bin/visits/visits.csv
 </code></pre>
 
 <h3 id="example-response-2">Example Response</h3>
@@ -174,7 +174,7 @@ startTime,visitorName,visitorCompany,hostName
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/api/meetings</span>)</span></span></h2>
+<h2 id="getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/meetings</span>)</span></span></h2>
 
 <p>Returns a list of today's scheduled meetings for all Endpoints in the Mountain View office, filtered by <code>startTime</code> (meetings are ignored if they ended more than 30 minutes ago, or start more than 1 hour in the future).</p>
 
@@ -190,7 +190,7 @@ startTime,visitorName,visitorCompany,hostName
 
 <h3 id="example-request-3">Example Request</h3>
 
-<pre><code>GET /api/meetings
+<pre><code>GET /cgi-bin/meetings
 </code></pre>
 
 <h3 id="example-response-3">Example Response</h3>

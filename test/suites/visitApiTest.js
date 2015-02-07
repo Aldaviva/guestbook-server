@@ -16,6 +16,8 @@ var ObjectId    = mongo.ObjectId;
 var db;
 var visitsCollection;
 
+var tabletAuth = { username: 'tabletUser', password: 'tabletPassword', sendImmediately: true };
+
 describe("Visit API", function(){
 
 	before(function(done){
@@ -36,42 +38,83 @@ describe("Visit API", function(){
 	});
 
 	describe("insertVisit", function(){
-		it("returns successfully", function(done){
-			var url = baseUrl + "visits";
-			logger.debug("POST "+url);
-			request.post({
-				url: url,
-				json: {
-					"visitorName": "John Chambers",
-					"visitorCompany": "Cisco",
-					"hostName": "Krish Ramakrishnan",
-					"hostId": "52000fdc0ae92a67ee80f902",
-				}
-			})
-				.then(function(res){
-					expect(res.statusCode).to.equal(200);
-					expect(res.body).to.have.property("_id").that.is.a('string');
-					expect(res.body).to.have.property("visitorName", "John Chambers");
-					expect(res.body).to.have.property("visitorCompany", "Cisco");
-					expect(res.body).to.have.property("hostName", "Krish Ramakrishnan");
-					expect(res.body).to.have.property("hostId", "52000fdc0ae92a67ee80f902");
-					expect(res.body).to.have.property("startTime").that.is.closeTo(+new Date(), 2000);
-					done();
+		describe("Basic authentication", function(){
+			it("is denied on missing credentials", function(done){
+				request.post({
+					url: baseUrl + "visits",
+					json: {}
 				})
-				.fail(done);
+					.then(function(res){
+						expect(res.statusCode).to.equal(401);
+						done();
+					})
+					.fail(done);
+			});
+
+			it("is denied on incorrect username", function(done){
+				request.post({
+					url: baseUrl + "visits",
+					auth: { username: "wrongUsername", password: "tabletPassword", sendImmediately: true },
+					json: {}
+				})
+					.then(function(res){
+						expect(res.statusCode).to.equal(401);
+						done();
+					})
+					.fail(done);
+			});
+
+			it("is denied on incorrect password", function(done){
+				request.post({
+					url: baseUrl + "visits",
+					auth: { username: "tabletUsername", password: "wrongPassword", sendImmediately: true },
+					json: {}
+				})
+					.then(function(res){
+						expect(res.statusCode).to.equal(401);
+						done();
+					})
+					.fail(done);
+			});
 		});
 
-		it("updates the database", function(done){
-			visitsCollection.find().toArray(function(err, docs){
-				expect(docs).to.have.length(1);
-				var doc = docs[0];
-				expect(doc).to.have.property("_id");
-				expect(doc).to.have.property("visitorName", "John Chambers");
-				expect(doc).to.have.property("visitorCompany", "Cisco");
-				expect(doc).to.have.property("hostName", "Krish Ramakrishnan");
-				expect(doc).to.have.property("hostId", "52000fdc0ae92a67ee80f902");
-				expect(doc).to.have.property("startTime").that.is.closeTo(+new Date(), 2000);
-				done(err);
+		describe("with valid auth and entity", function(){
+			it("returns successfully", function(done){
+				request.post({
+					url: baseUrl + "visits",
+					auth: tabletAuth,
+					json: {
+						"visitorName": "John Chambers",
+						"visitorCompany": "Cisco",
+						"hostName": "Krish Ramakrishnan",
+						"hostId": "52000fdc0ae92a67ee80f902",
+					}
+				})
+					.then(function(res){
+						expect(res.statusCode).to.equal(200);
+						expect(res.body).to.have.property("_id").that.is.a('string');
+						expect(res.body).to.have.property("visitorName", "John Chambers");
+						expect(res.body).to.have.property("visitorCompany", "Cisco");
+						expect(res.body).to.have.property("hostName", "Krish Ramakrishnan");
+						expect(res.body).to.have.property("hostId", "52000fdc0ae92a67ee80f902");
+						expect(res.body).to.have.property("startTime").that.is.closeTo(+new Date(), 2000);
+						done();
+					})
+					.fail(done);
+			});
+
+			it("updates the database", function(done){
+				visitsCollection.find().toArray(function(err, docs){
+					expect(docs).to.have.length(1);
+					var doc = docs[0];
+					expect(doc).to.have.property("_id");
+					expect(doc).to.have.property("visitorName", "John Chambers");
+					expect(doc).to.have.property("visitorCompany", "Cisco");
+					expect(doc).to.have.property("hostName", "Krish Ramakrishnan");
+					expect(doc).to.have.property("hostId", "52000fdc0ae92a67ee80f902");
+					expect(doc).to.have.property("startTime").that.is.closeTo(+new Date(), 2000);
+					done(err);
+				});
 			});
 		});
 

@@ -3,7 +3,7 @@ JSL := jsl
 MOCHA := node_modules/mocha/bin/mocha
 NODE:= node
 
-TEST_REPORTER := spec
+TEST_REPORTER := nyan
 
 all: doc
 

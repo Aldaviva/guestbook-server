@@ -1,6 +1,9 @@
 {
     "auth": {
-        "admins": [ "admin@email.com" ]
+        "admins": [ "admin@email.com" ],
+        "tabletUsers": {
+            "tabletUser": "tabletPassword"
+        }
     },
     "cache": {
         "ttl": 10
@@ -10,6 +13,9 @@
     },
     "floorplan": {
         "baseUrl": "http://floorplan.bluejeansnet.com/floorplan"
+    },
+    "hipchat": {
+        "authToken": "go to https://hipchat.com/account/api and click Create Token"
     },
     "httpServer": {
         "port": 8080,

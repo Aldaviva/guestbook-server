@@ -1,0 +1,41 @@
+body {
+    font: 16px "Hurme Geometric Sans";
+    background: white;
+    color: @dark_gray;
+}
+
+a {
+    color: @blue;
+    text-decoration: none;
+}
+
+h1 {
+    text-transform: uppercase;
+    margin: 23px 30px;
+    font-weight: 800;
+    font-size: 75px;
+    line-height: 75px;
+}
+
+.auth {
+    @auth_size: 24px;
+
+    background     : hsla(0, 0%, 0%, 0.03);
+    font           : bold 12px/@auth_size "Hurme Geometric Sans";
+    height         : @auth_size;
+    position       : absolute;
+    right          : 28px;
+    top            : 28px;
+    text-transform : uppercase;
+
+    .userProfilePhoto {
+        height         : @auth_size;
+        vertical-align : bottom;
+        width          : @auth_size;
+    }
+
+    a {
+        padding        : 0 12px;
+        vertical-align : bottom;
+    }
+} 

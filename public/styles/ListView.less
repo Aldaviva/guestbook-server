@@ -1,0 +1,69 @@
+.ListView(){
+
+    position: absolute;
+    top: 125px;
+    bottom: 0;
+
+    h2 {
+        font-size: 47px;
+        line-height: 50px;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding-left: 47px;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+
+    ol {
+        overflow-y: auto;
+        position: absolute;
+        top: 50px + 3px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    li {
+        margin: 0 3px;
+        padding: 25px 60px-2*3px 30px;
+        position: relative;
+
+        &:hover, &.highlight {
+            background-color: fade(@blue, 3%);
+        }
+
+        + li::before {
+            position: absolute;
+            top: 0;
+            height: 0;
+            left: 58px;
+            right: 58px;
+            content: " ";
+            border-top: 1px solid hsla(0, 0%, 0%, 0.1);
+        }
+    }
+
+    .subject {
+        font-size: 36px;
+        line-height: 36px;
+        color: black;
+        padding-bottom: 14px;
+        margin-right: 150px;
+        .ellipsis();
+    }
+
+    .minorProperties {
+        position: absolute;
+        right: 60px;
+        top: 39px;
+        font-size: 21px;
+        color: black;
+        opacity: 0.5;
+        text-align: right;
+        line-height: 35px;
+    }
+
+    .EmployeeView {
+        margin-left: 25px;
+    }
+}

@@ -1,0 +1,28 @@
+.VisitListView {
+    .ListView();
+    left: 0;
+    right: 50%;
+
+    border-right: 3px solid hsla(0, 0%, 0%, 0.05);
+
+    .csvDownload {
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 50px;
+        padding: 0 22px;
+        background: hsla(0, 0%, 0%, 0.03);
+        text-transform: uppercase;
+        display: inline-block;
+
+        vertical-align: bottom;
+        position: absolute;
+        right: 47px;
+        top: 0;
+    }
+
+    .EmployeeView {
+        &::before {
+            content: "visiting";
+        }
+    }
+}

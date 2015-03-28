@@ -9,7 +9,35 @@
 
     <body>
         <h1>Guestbook</h1>
-        <p class="authStatus">Logged in as {{ user.email }} <a href="/logout">log out</a></p>
+        <div class="auth">
+            <img class="userProfilePhoto"
+            /><a href="logout">Log out</a>
+        </div>
 
+        <div class="VisitListView"></div>
+        <div class="MeetingListView"></div>
+
+        <script src="scripts/thirdparty/jquery.js"></script>
+        <script src="scripts/thirdparty/q.js"></script>
+        <script src="scripts/thirdparty/lodash.js"></script>
+        <script src="scripts/thirdparty/backbone.js"></script>
+        <script src="scripts/thirdparty/moment.js"></script>
+        <script src="scripts/thirdparty/socket.io.js"></script>
+
+        <script src="scripts/data.js"></script>
+        <script src="scripts/EmployeeView.js"></script>
+        <script src="scripts/VisitView.js"></script>
+        <script src="scripts/MeetingView.js"></script>
+        <script src="scripts/VisitListView.js"></script>
+        <script src="scripts/MeetingListView.js"></script>
+        <script src="scripts/Guestbook.js"></script>
+
+        <script>
+            (function(){
+                Guestbook.config = {{{ json config }}};
+                Guestbook.user = {{{ json user }}};
+                window.guestbook = new Guestbook();
+            })();
+        </script>
     </body>
 </html>

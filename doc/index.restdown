@@ -24,10 +24,10 @@ A Visit is when a person arrives at Blue Jeans to see a certain host employee. I
 ```json
 {
     "_id": "54d47e4e32f9bfe44ea4b5a6",
-    "visitorName": "John Chambers",
-    "visitorCompany": "Cisco",
-	"hostName": "Krish Ramakrishnan",
-	"hostId": "52000fdc0ae92a67ee80f902",
+    "visitorName": "Robert Mustacchi",
+    "visitorCompany": "Joyent",
+	"hostName": "Ben Hutchison",
+	"hostId": "5201db41f5f4be9ae57e37a9",
 	"startTime": 1423210617000
 }
 ```
@@ -68,10 +68,10 @@ POST /cgi-bin/visits/
 Content-Type: application/json
 
 {
-    "visitorName": "John Chambers",
-	"visitorCompany": "Cisco",
-	"hostName": "Krish Ramakrishnan",
-	"hostId": "52000fdc0ae92a67ee80f902"
+    "visitorName": "Robert Mustacchi",
+    "visitorCompany": "Joyent",
+    "hostName": "Ben Hutchison",
+    "hostId": "5201db41f5f4be9ae57e37a9",
 }
 ```
 
@@ -83,10 +83,10 @@ Content-Type: application/json
 
 {
     "_id": "54d47e4e32f9bfe44ea4b5a6",
-	"visitorName": "John Chambers",
-	"visitorCompany": "Cisco",
-	"hostName": "Krish Ramakrishnan",
-	"hostId": "52000fdc0ae92a67ee80f902",
+	"visitorName": "Robert Mustacchi",
+    "visitorCompany": "Joyent",
+    "hostName": "Ben Hutchison",
+    "hostId": "5201db41f5f4be9ae57e37a9",
 	"startTime": 1423210617000
 }
 ```
@@ -117,7 +117,7 @@ Content-Type: text/csv
 Content-Disposition: attachment; filename=visits.csv
 
 startTime,visitorName,visitorCompany,hostName
-"2/6/15 1:31 a","John Chambers","Cisco","Krish Ramakrishnan"
+"2/6/15 1:31 a","Robert Mustacchi","Joyent","Ben Hutchison"
 ```
 
 # Meetings

@@ -59,7 +59,7 @@
 				return false;
 			}
 
-			if(!_.intersection(Guestbook.config.catalyst.endpoints, this.get('endpointIds').length)){
+			if(!_.intersection(Guestbook.config.catalyst.endpoints, this.get('endpointIds')).length){
 				return false;
 			}
 
@@ -79,7 +79,9 @@
 			return _(res).map(function(attrs){
 					return new Meeting(attrs);
 				})
-				.filter("isNearbyAndSoon")
+				.filter(function(meeting){
+					return meeting.isNearbyAndSoon();
+				})
 				.value();
 		}
 	});
@@ -87,8 +89,15 @@
 
 	var Person = scope.Person = Backbone.Model.extend({
 		idAttribute: '_id',
+		urlRoot: function(){
+			return Guestbook.config.floorplan.baseUrl + "/people";
+		},
 		getPhotoUrl: function(){
-			return this.url() + "/photo";
+			if(this.id !== "_unknown"){
+				return this.url() + "/photo";
+			} else {
+				return Guestbook.config.floorplan.baseUrl + "/images/missing_photo.jpg";
+			}
 		},
 		getFloorplanWebUrl: function(){
 			return Guestbook.config.floorplan.baseUrl + "/" + this.get('office') + '#' + this.id + "/" + this.get("fullname").replace(/\s/g, '_');
@@ -98,19 +107,29 @@
 	var PersonCollection = scope.PersonCollection = PromiseFetchingCollection.extend({
 		model: Person,
 		url: function(){
-			return Guestbook.config.floorplan.baseUrl + "/people";
+			return Person.prototype.urlRoot();
 		},
 		findByNameOrEmail: function(nameOrEmail){
 			var isEmail = (nameOrEmail.indexOf('@') !== -1);
+			nameOrEmail = nameOrEmail.replace(/@.*$/, '');
+			var person;
 
 			if(isEmail){
-				var email = nameOrEmail;
-				var emailLocalPart = email.substr(0, email.indexOf('@'));
-				return this.findWhere({ email: emailLocalPart });
+				person = this.findWhere({ email: nameOrEmail });
 			} else {
-				var name = nameOrEmail;
-				return this.findWhere({ fullname: name});
+				person = this.findWhere({ fullname: nameOrEmail });
 			}
+
+			if(!person){
+				person = new Person({
+					_id: "_unknown",
+					fullname: nameOrEmail,
+					email: nameOrEmail,
+					office: 'mv'
+				});
+			}
+
+			return person;
 		}
 	});
 

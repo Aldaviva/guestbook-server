@@ -10,14 +10,18 @@
 
         render: function(){
             if(this.$el.is(':empty')){
+                var isModelInFloorplan = (this.model.id !== '_unknown');
+                var tagName = isModelInFloorplan ? 'a' : 'span';
+
                 this.$el.append(
-                    $('<a>', {
-                        target: '_blank',
-                    }).append(
+                    $('<'+tagName+'>').append(
                         $('<img>'),
-                        $('<span>')
+                        $('<span>', { class: 'name' })
                     )
                 );
+                if(isModelInFloorplan){
+                    this.$('a').attr('target', "_blank");
+                }
             }
 
             this.$('a').attr({
@@ -29,7 +33,7 @@
                 src: this.model.getPhotoUrl()
             });
 
-            this.$('span').text(this.model.get('fullname'));
+            this.$('.name').text(this.model.get('fullname'));
 
             return this.el;
         }

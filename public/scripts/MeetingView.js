@@ -28,7 +28,7 @@
             }
 
             this.$(".title")
-                .text(this.model.get('title'))
+                .text(this.model.get('title') || "(no title)")
                 .attr('title', this.model.get('title'));
 
             var endpointNames = _(this.model.get('endpointIds'))
@@ -40,8 +40,6 @@
             this.$(".endpointName").text(endpointNames);
 
             this.$(".startTime").text(new moment(this.model.get('startTime')).format("h:mm A"));
-
-            
 
             return this.el;
         },

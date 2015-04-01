@@ -25,6 +25,8 @@
             ]);
         }, this))
         .done();
+
+        this.initEventing();
     };
 
     Guestbook.prototype.renderAuthStatus = function(){
@@ -34,6 +36,26 @@
             .attr('title', "Logged in as " + currentPerson.get('fullname'))
             .find('.userProfilePhoto')
                 .attr('src', currentPerson.getPhotoUrl());
+    };
+
+    Guestbook.prototype.initEventing = function() {
+        var socket = scope.socket = io.connect(window.location.protocol+'//'+window.location.hostname);
+
+        socket.on('connect', function(){
+            console.info('Socket.IO connected.');
+        });
+
+        socket.on('disconnect', function(){
+            console.warn('Socket.IO disconnected.');
+        });
+
+        socket.on('visit:created', function(){
+            scope.visitCollection.fetch();
+        });
+
+        setInterval(function(){
+            scope.visitCollection.fetch();
+        }, 5*1000);
     };
 
 })(this);

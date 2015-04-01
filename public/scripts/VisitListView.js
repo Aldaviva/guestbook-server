@@ -9,6 +9,8 @@
 
             this.collection.on('reset', this.addAll);
             this.collection.on('add', this.addOne);
+
+            this.scrollToBottom = _.throttle(this.scrollToBottom, 250);
         },
 
         render: function(){
@@ -26,10 +28,16 @@
         addOne: function(model){
             var visitView = new VisitView({ model: model });
             this.listEl.append(visitView.render());
+            this.scrollToBottom();
         },
 
         addAll: function(collection){
             collection.forEach(this.addOne);
+        },
+
+        scrollToBottom: function(){
+            var olEl = this.listEl[0];
+            olEl.scrollTop = olEl.scrollHeight - olEl.clientHeight;
         }
     });
 

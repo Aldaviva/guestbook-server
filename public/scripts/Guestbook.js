@@ -1,6 +1,8 @@
 (function(scope){
 
     var Guestbook = scope.Guestbook = function(){
+        scope.mediator = new Mediator();
+
         scope.endpointCollection = new EndpointCollection();
         scope.personCollection = new PersonCollection();
         scope.meetingCollection = new MeetingCollection();
@@ -55,6 +57,7 @@
 
         setInterval(function(){
             scope.visitCollection.fetch();
+            scope.meetingCollection.fetch();
         }, 5*1000);
     };
 

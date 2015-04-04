@@ -4,6 +4,11 @@
 
         tagName: "li",
 
+        events: {
+            "mouseenter": "onHover",
+            "mouseleave": "offHover"
+        },
+
         initialize: function(){
             _.bindAll(this);
 
@@ -27,15 +32,28 @@
                 this.$(".EmployeeView").replaceWith(this.employeeView.render());
             }
 
+            var visitorName = this.model.get('visitorName') + " (" + this.model.get('visitorCompany')+")";
             this.$(".visitorName")
-                .text(this.model.get('visitorName'))
-                .attr('title', this.model.get('visitorName'));
+                .text(visitorName)
+                .attr('title', visitorName);
 
             this.$(".startDate").text(new moment(this.model.get('startTime')).format("MMMM D"));
 
             this.$(".startTime").text(new moment(this.model.get('startTime')).format("h:mm A"));
 
             return this.el;
+        },
+
+        onHover: function(event){
+            event && event.preventDefault();
+
+            mediator.publish("highlightMeetings", { visit: this.model });
+        },
+
+        offHover: function(event){
+            event && event.preventDefault();
+
+            mediator.publish("highlightMeetings", { visit: null });
         }
 
     });

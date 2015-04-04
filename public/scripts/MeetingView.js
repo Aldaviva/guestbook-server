@@ -9,6 +9,7 @@
 
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'remove', this.remove);
+            this.listenTo(this.model, 'highlight', this.highlight);
         },
 
         render: function(){
@@ -48,6 +49,10 @@
             this.employeeView && this.employeeView.remove();
 
             return MeetingView.__super__.remove.apply(this, arguments);
+        },
+
+        highlight: function(){
+            this.$el.addClass('highlight');
         }
 
     });

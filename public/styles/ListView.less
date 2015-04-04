@@ -4,6 +4,10 @@
     top: 125px;
     bottom: 0;
 
+    .ListViewHover(){
+        background-color: fade(@blue, 8%);
+    }
+
     h2 {
         font-size: 47px;
         line-height: 50px;
@@ -28,8 +32,8 @@
         padding: 25px 60px-2*3px 30px;
         position: relative;
 
-        &:hover, &.highlight {
-            background-color: fade(@blue, 3%);
+        &.highlight {
+            .ListViewHover();
         }
 
         + li::before {

@@ -1,6 +1,6 @@
 {
 	"name": "guestbook-server",
-	"version": "0.0.0",
+	"version": "1.0.2",
 	"author": "Ben Hutchison <ben@bluejeans.com>",
 	"description": "Front desk sign-in backend server.",
 	"repository":{

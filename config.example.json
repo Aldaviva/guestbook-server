@@ -23,5 +23,9 @@
     },
     "smtp": {
         "host": "127.0.0.1"
+    },
+    "greetings": {
+        "default": "Welcome to Blue Jeans! Please sign in.",
+        "2015-01-01": "(♥ó㉨ò)ﾉ♡"
     }
 }

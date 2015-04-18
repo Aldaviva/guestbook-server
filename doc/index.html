@@ -29,6 +29,10 @@
   <ul>
     <li><div><a href="#getMeetings"><span class="method both"><span class="name">getMeetings</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/meetings</span>)</span></span></a></div></li>
   </ul></li>
+  <li><div><a href="#greetings">Greetings</a></div>
+  <ul>
+    <li><div><a href="#getCurrentGreeting"><span class="method both"><span class="name">getCurrentGreeting</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/greetings/now</span>)</span></span></a></div></li>
+  </ul></li>
 </ul>
 
     </div>
@@ -101,7 +105,7 @@
 
 <h3 id="example-request">Example Request</h3>
 
-<div class="codehilite"><pre><code><span class="err">POST</span> <span class="err">/cgi-bin/visits/</span>
+<div class="codehilite"><pre><code><span class="err">POST</span> <span class="err">/cgi-bin/visits/</span> <span class="err">HTTP/</span><span class="mf">1.1</span>
 <span class="err">Content-Type:</span> <span class="err">application/json</span>
 
 <span class="p">{</span>
@@ -141,7 +145,7 @@
 
 <h3 id="example-request-2">Example Request</h3>
 
-<pre><code>GET /cgi-bin/visits/visits.csv
+<pre><code>GET /cgi-bin/visits/visits.csv HTTP/1.1
 </code></pre>
 
 <h3 id="example-response-2">Example Response</h3>
@@ -190,7 +194,7 @@ startTime,visitorName,visitorCompany,hostName
 
 <h3 id="example-request-3">Example Request</h3>
 
-<pre><code>GET /cgi-bin/meetings
+<pre><code>GET /cgi-bin/meetings HTTP/1.1
 </code></pre>
 
 <h3 id="example-response-3">Example Response</h3>
@@ -214,6 +218,50 @@ startTime,visitorName,visitorCompany,hostName
         <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;My Personal Meeting&quot;</span>
     <span class="p">}</span>
 <span class="p">]</span>
+</code></pre></div>
+
+<h1 id="greetings">Greetings</h1>
+
+<p>A Greeting represents the text and cloud icon that appears on the tablet. Different greetings can be shown on different days.</p>
+
+<div class="codehilite"><pre><code><span class="p">{</span>
+    <span class="nt">&quot;greetingText&quot;</span><span class="p">:</span> <span class="s2">&quot;Happy Mothers&#39; Day! Please sign in.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;greetingImageUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://floorplan.bluejeansnet.com:8090/images/greetings/2015-05-10.png&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>greetingText</strong> is the text which is shown in the speech bubble above the cloud image.</p>
+
+<p><strong>greetingImageUrl</strong> is the absolute URL of the image of the cloud. It will always be a 499px × 346px 24-bit PNG with transparency.</p>
+
+<h2 id="getCurrentGreeting"><span class="method both"><span class="name">getCurrentGreeting</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/greetings/now</span>)</span></span></h2>
+
+<p>Get the Greeting for today (today is defined by the server clock, not the client clock). If there is no special Greeting for today, the default values will be returned instead.</p>
+
+<h3 id="inputs-4">Inputs</h3>
+
+<p>none</p>
+
+<h3 id="outputs-4">Outputs</h3>
+
+<p><code>Content-Type: application/json</code></p>
+
+<p>A Greeting entity.</p>
+
+<h3 id="example-request-4">Example Request</h3>
+
+<div class="codehilite"><pre><code><span class="err">GET</span> <span class="err">/cgi-bin/greetings/now</span> <span class="err">HTTP/</span><span class="mf">1.1</span>
+</code></pre></div>
+
+<h3 id="example-response-4">Example Response</h3>
+
+<div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;greetingText&quot;</span><span class="p">:</span> <span class="s2">&quot;Welcome to Blue Jeans! Please sign in.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;greetingImageUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://floorplan.bluejeansnet.com:8090/images/greetings/default.png&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 
     </div> <!-- #content -->

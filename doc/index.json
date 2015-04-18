@@ -2,6 +2,7 @@
   "endpoints": [
     "POST   /cgi-bin/visits/",
     "GET    /cgi-bin/visits/visits.csv",
-    "GET    /cgi-bin/meetings"
+    "GET    /cgi-bin/meetings",
+    "GET    /cgi-bin/greetings/now"
   ]
 }

@@ -40,9 +40,7 @@
 	var VisitCollection = scope.VisitCollection = PromiseFetchingCollection.extend({
 		url        : 'cgi-bin/visits',
 		model      : Visit,
-		comparator : function(model){
-			return model.get('startTime');
-		}
+		comparator : 'startTime'
 	});
 
 
@@ -72,9 +70,7 @@
 		url        : function(){
 			return Guestbook.config.catalyst.baseUrl + '/meetings';
 		},
-		comparator : function(model){
-			return model.get('startTime');
-		},
+		comparator : 'startTime',
 		parse: function(res, options){
 			return _(res).map(function(attrs){
 					return new Meeting(attrs);

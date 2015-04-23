@@ -1,6 +1,6 @@
 (function(scope){
 
-    var MeetingListView = scope.MeetingListView = Backbone.View.extend({
+    var MeetingListView = scope.MeetingListView = ListView.extend({
 
         initialize: function(){
             _.bindAll(this);
@@ -8,6 +8,7 @@
             this.listEl = null;
 
             this.collection.on('add', this.addOne);
+            this.collection.on('sync', _.partial(this.sortViews, "meetingView"));
 
             mediator.subscribe("highlightMeetings", this.highlightMeetings);
         },

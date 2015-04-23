@@ -71,7 +71,7 @@ Content-Type: application/json
     "visitorName": "Robert Mustacchi",
     "visitorCompany": "Joyent",
     "hostName": "Ben Hutchison",
-    "hostId": "5201db41f5f4be9ae57e37a9",
+    "hostId": "5201db41f5f4be9ae57e37a9"
 }
 ```
 

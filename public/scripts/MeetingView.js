@@ -7,6 +7,8 @@
         initialize: function(){
             _.bindAll(this);
 
+            _.extend(this.model, { meetingView: this });
+
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'remove', this.remove);
             this.listenTo(this.model, 'highlight', this.highlight);

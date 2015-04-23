@@ -1,6 +1,6 @@
 (function(scope){
 
-    var VisitListView = scope.VisitListView = Backbone.View.extend({
+    var VisitListView = scope.VisitListView = ListView.extend({
 
         initialize: function(){
             _.bindAll(this);
@@ -9,6 +9,7 @@
 
             this.collection.on('reset', this.addAll);
             this.collection.on('add', this.addOne);
+            this.collection.on('sync', _.partial(this.sortViews, "visitView"));
 
             this.scrollToBottom = _.throttle(this.scrollToBottom, 250);
         },

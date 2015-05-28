@@ -29,7 +29,7 @@
                     $("<div>", { class: "EmployeeView" })
                 );
 
-                var host = personCollection.get(this.model.get('hostId'));
+                var host = personCollection.get(this.model.get('hostId')) || Person.getUnknownPerson(this.model.get('hostName'));
                 this.employeeView = new EmployeeView({ model: host });
                 this.$(".EmployeeView").replaceWith(this.employeeView.render());
             }

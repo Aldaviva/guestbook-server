@@ -98,6 +98,15 @@
 		getFloorplanWebUrl: function(){
 			return Guestbook.config.floorplan.baseUrl + "/" + this.get('office') + '#' + this.id + "/" + this.get("fullname").replace(/\s/g, '_');
 		}
+	},{
+		getUnknownPerson: function(nameOrEmail){
+			return new Person({
+				_id: "_unknown",
+				fullname: nameOrEmail,
+				email: nameOrEmail,
+				office: 'mv'
+			});
+		}
 	});
 
 	var PersonCollection = scope.PersonCollection = PromiseFetchingCollection.extend({
@@ -117,12 +126,7 @@
 			}
 
 			if(!person){
-				person = new Person({
-					_id: "_unknown",
-					fullname: nameOrEmail,
-					email: nameOrEmail,
-					office: 'mv'
-				});
+				person = Person.getUnknownPerson(nameOrEmail);
 			}
 
 			return person;

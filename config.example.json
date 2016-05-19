@@ -17,6 +17,9 @@
     "hipchat": {
         "authToken": "go to https://hipchat.com/account/api and click Create Token"
     },
+    "slack": {
+        "accessToken": "Use the Slack Token Stealer to get an access token for Slack"
+    },
     "httpServer": {
         "port": 8080,
         "baseUrl": "http://example.com:8080"

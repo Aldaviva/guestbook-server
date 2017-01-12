@@ -1,6 +1,6 @@
 {
 	"name": "guestbook-server",
-	"version": "1.0.7",
+	"version": "1.0.8-SNAPSHOT",
 	"author": "Ben Hutchison <ben@bluejeans.com>",
 	"description": "Front desk sign-in backend server.",
 	"repository":{
@@ -38,6 +38,7 @@
 		"mongodb": "1.4.30",
 		"chai": "1.10.0",
 		"mocha": "1.8.2",
-		"sinon": "1.12.2"
+		"sinon": "1.12.2",
+		"cookie-signature": "1.0.6"
 	}
 }

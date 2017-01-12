@@ -23,6 +23,7 @@
   <li><div><a href="#visits">Visits</a></div>
   <ul>
     <li><div><a href="#insertVisit"><span class="method both"><span class="name">insertVisit</span> <span class="endpoint">(<span class="verb">POST</span> <span class="path">/cgi-bin/visits/</span>)</span></span></a></div></li>
+    <li><div><a href="#getVisits"><span class="method both"><span class="name">getVisits</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/</span>)</span></span></a></div></li>
     <li><div><a href="#getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/visits.csv</span>)</span></span></a></div></li>
   </ul></li>
   <li><div><a href="#meetings">Meetings</a></div>
@@ -93,7 +94,7 @@
 <table>
 <tbody>
 <tr><td><strong>where</strong></td><td><strong>name</strong></td><td><strong>type</strong></td><td><strong>description</strong></td><td><strong>example</strong></td></tr>
-<tr><td>body</td><td>visit</td><td><a href="#visits">Visit</a></td><td>the server will assign an <code>_id</code> and <code>startTime</code>, so send <code>null</code></td><td>see Example Request below</td></tr>
+<tr><td>body</td><td>visit</td><td><a href="#visits">Visit</a></td><td>the server will assign an <code>_id</code> and <code>startTime</code>, so send <code>null</code> for those properties</td><td>see Example Request below</td></tr>
 </tbody>
 </table>
 
@@ -131,24 +132,86 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/visits.csv</span>)</span></span></h2>
+<h2 id="getVisits"><span class="method both"><span class="name">getVisits</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/</span>)</span></span></h2>
+
+<p>Retrieve a JSON list of Visits, with some sort of optional filtering, limiting, or pagination.
+Results are sorted in descending date order, so the first Visit in the array is the newest.</p>
 
 <h3 id="inputs-2">Inputs</h3>
 
-<p>none</p>
+<table>
+<tbody>
+<tr><td><strong>where</strong></td><td><strong>name</strong></td><td><strong>type</strong></td><td><strong>description</strong></td><td><strong>example</strong></td></tr>
+<tr><td>query</td><td>pageSize</td><td>integer</td><td>How many Visits to return per page, or infinity if omitted</td><td><code>?pageSize=100</code></td></tr>
+<tr><td>query</td><td>pageNum</td><td>integer</td><td>Which page of Visits to return, or <code>0</code> (the most recent page) if omitted</td><td><code>?pageNum=0</code></td></tr>
+</tbody>
+</table>
+
+<p>If neither <code>pageSize</code> nor <code>pageNum</code> are specified, all Visits are returned in one big JSON array.</p>
 
 <h3 id="outputs-2">Outputs</h3>
+
+<p><code>Content-Type: application/json</code></p>
+
+<p>An array of <a href="#visits">Visit</a> objects, or the empty array if there are no Visits or your <code>pageNum</code> is out of bounds.</p>
+
+<h3 id="example-request-2">Example Request</h3>
+
+<div class="codehilite"><pre><code><span class="err">GET</span> <span class="err">/cgi-bin/visits/?pageNum=</span><span class="mi">0</span><span class="err">&amp;pageSize=</span><span class="mi">30</span> <span class="err">HTTP/</span><span class="mf">1.1</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+</code></pre></div>
+
+<h3 id="example-response-2">Example Response</h3>
+
+<div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
+<span class="err">Content-Type:</span> <span class="err">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;_id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a6&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;Robert Mustacchi&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Joyent&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Ben Hutchison&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;5201db41f5f4be9ae57e37a9&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1423210617000</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;_id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a5&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;Firstname Lastname&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Company&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Luke Ma&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f908&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1423210616000</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;_id&quot;</span><span class="p">:</span> <span class="s2">&quot;54d47e4e32f9bfe44ea4b5a4&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorName&quot;</span><span class="p">:</span> <span class="s2">&quot;John Chambers&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;visitorCompany&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco Systems&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostName&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Ramakrishnan&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;hostId&quot;</span><span class="p">:</span> <span class="s2">&quot;52000fdc0ae92a67ee80f902&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1423210615000</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<h2 id="getVisitsCSV"><span class="method both"><span class="name">getVisitsCSV</span> <span class="endpoint">(<span class="verb">GET</span> <span class="path">/cgi-bin/visits/visits.csv</span>)</span></span></h2>
+
+<h3 id="inputs-3">Inputs</h3>
+
+<p>none</p>
+
+<h3 id="outputs-3">Outputs</h3>
 
 <p><code>Content-Type: text/csv</code></p>
 
 <p>A comma-separated spreadsheet containing all Visits, sorted in descending <code>startTime</code> order.</p>
 
-<h3 id="example-request-2">Example Request</h3>
+<h3 id="example-request-3">Example Request</h3>
 
 <pre><code>GET /cgi-bin/visits/visits.csv HTTP/1.1
 </code></pre>
 
-<h3 id="example-response-2">Example Response</h3>
+<h3 id="example-response-3">Example Response</h3>
 
 <pre><code>HTTP/1.1 200 OK
 Content-Type: text/csv
@@ -182,22 +245,22 @@ startTime,visitorName,visitorCompany,hostName
 
 <p>Returns a list of today's scheduled meetings for all Endpoints in the Mountain View office, filtered by <code>startTime</code> (meetings are ignored if they ended more than 30 minutes ago, or start more than 1 hour in the future).</p>
 
-<h3 id="inputs-3">Inputs</h3>
+<h3 id="inputs-4">Inputs</h3>
 
 <p>none</p>
 
-<h3 id="outputs-3">Outputs</h3>
+<h3 id="outputs-4">Outputs</h3>
 
 <p><code>Content-Type: application/json</code></p>
 
 <p>A list of <a href="#meetings">Meeting</a> objects.</p>
 
-<h3 id="example-request-3">Example Request</h3>
+<h3 id="example-request-4">Example Request</h3>
 
 <pre><code>GET /cgi-bin/meetings HTTP/1.1
 </code></pre>
 
-<h3 id="example-response-3">Example Response</h3>
+<h3 id="example-response-4">Example Response</h3>
 
 <div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
 <span class="err">Content-Type:</span> <span class="err">application/json</span>
@@ -238,22 +301,22 @@ startTime,visitorName,visitorCompany,hostName
 
 <p>Get the Greeting for today (today is defined by the server clock, not the client clock). If there is no special Greeting for today, the default values will be returned instead.</p>
 
-<h3 id="inputs-4">Inputs</h3>
+<h3 id="inputs-5">Inputs</h3>
 
 <p>none</p>
 
-<h3 id="outputs-4">Outputs</h3>
+<h3 id="outputs-5">Outputs</h3>
 
 <p><code>Content-Type: application/json</code></p>
 
 <p>A Greeting entity.</p>
 
-<h3 id="example-request-4">Example Request</h3>
+<h3 id="example-request-5">Example Request</h3>
 
 <div class="codehilite"><pre><code><span class="err">GET</span> <span class="err">/cgi-bin/greetings/now</span> <span class="err">HTTP/</span><span class="mf">1.1</span>
 </code></pre></div>
 
-<h3 id="example-response-4">Example Response</h3>
+<h3 id="example-response-5">Example Response</h3>
 
 <div class="codehilite"><pre><code><span class="err">HTTP/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="err">OK</span>
 <span class="err">Content-Type:</span> <span class="err">application/json</span>

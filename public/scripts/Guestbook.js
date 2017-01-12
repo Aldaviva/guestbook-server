@@ -1,5 +1,7 @@
 (function(scope){
 
+    var visitFetchParams = { data: { pageSize: 25, pageNum: 0 }};
+
     var Guestbook = scope.Guestbook = function(){
         scope.mediator = new Mediator();
 
@@ -23,7 +25,7 @@
 
             return Q.all([
                 meetingCollection.fetchPromise(),
-                visitCollection.fetchPromise({ reset: true })
+                visitCollection.fetchPromise(visitFetchParams)
             ]);
         }, this))
         .done();
@@ -56,7 +58,7 @@
         });
 
         setInterval(function(){
-            scope.visitCollection.fetch();
+            scope.visitCollection.fetch(visitFetchParams);
             scope.meetingCollection.fetch();
         }, 5*1000);
     };

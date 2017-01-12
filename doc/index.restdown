@@ -53,7 +53,7 @@ Create a new record of a visitor signing in at the front desk. Side effects incl
 `Content-Type: application/json`
 
 ||**where**||**name**||**type**||**description**||**example**||
-||body||visit||[Visit](#visits)||the server will assign an `_id` and `startTime`, so send `null`||see Example Request below||
+||body||visit||[Visit](#visits)||the server will assign an `_id` and `startTime`, so send `null` for those properties||see Example Request below||
 
 ### Outputs
 
@@ -89,6 +89,66 @@ Content-Type: application/json
     "hostId": "5201db41f5f4be9ae57e37a9",
 	"startTime": 1423210617000
 }
+```
+
+## getVisits (GET /cgi-bin/visits/)
+
+Retrieve a JSON list of Visits, with some sort of optional filtering, limiting, or pagination.
+Results are sorted in descending date order, so the first Visit in the array is the newest.
+
+### Inputs
+
+||**where**||**name**||**type**||**description**||**example**||
+||query||pageSize||integer||How many Visits to return per page, or infinity if omitted||`?pageSize=100`||
+||query||pageNum||integer||Which page of Visits to return, or `0` (the most recent page) if omitted||`?pageNum=0`||
+
+If neither `pageSize` nor `pageNum` are specified, all Visits are returned in one big JSON array.
+
+### Outputs
+
+`Content-Type: application/json`
+
+An array of [Visit](#visits) objects, or the empty array if there are no Visits or your `pageNum` is out of bounds.
+
+### Example Request
+
+```json
+GET /cgi-bin/visits/?pageNum=0&pageSize=30 HTTP/1.1
+Content-Type: application/json
+```
+
+### Example Response
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "_id": "54d47e4e32f9bfe44ea4b5a6",
+        "visitorName": "Robert Mustacchi",
+        "visitorCompany": "Joyent",
+        "hostName": "Ben Hutchison",
+        "hostId": "5201db41f5f4be9ae57e37a9",
+        "startTime": 1423210617000
+    },
+    {
+        "_id": "54d47e4e32f9bfe44ea4b5a5",
+        "visitorName": "Firstname Lastname",
+        "visitorCompany": "Company",
+        "hostName": "Luke Ma",
+        "hostId": "52000fdc0ae92a67ee80f908",
+        "startTime": 1423210616000
+    },
+    {
+        "_id": "54d47e4e32f9bfe44ea4b5a4",
+        "visitorName": "John Chambers",
+        "visitorCompany": "Cisco Systems",
+        "hostName": "Krish Ramakrishnan",
+        "hostId": "52000fdc0ae92a67ee80f902",
+        "startTime": 1423210615000
+    }
+]
 ```
 
 ## getVisitsCSV (GET /cgi-bin/visits/visits.csv)

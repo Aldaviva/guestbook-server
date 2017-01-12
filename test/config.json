@@ -5,8 +5,12 @@
         ],
         "tabletUsers": {
             "tabletUser": "tabletPassword"
+        },
+        "google": {
+            "clientID": "a",
+            "clientSecret": "b",
+            "callbackURL": "c"
         }
-
     },
     "cache": {
         "ttl": 10
@@ -18,10 +22,12 @@
         "baseUrl": "http://floorplan.bluejeansnet.com/floorplan"
     },
     "httpServer": {
-        "port": 8091,
-        "baseUrl": "http://localhost:8091"
+        "port": 8092,
+        "baseUrl": "http://localhost:8092"
     },
     "smtp": {
         "host": "0.0.0.0"
-    }
+    },
+    "hipchat": {},
+    "slack": {}
 }

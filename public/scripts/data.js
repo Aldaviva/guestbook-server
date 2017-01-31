@@ -47,7 +47,7 @@
 	var Meeting = scope.Meeting = Backbone.Model.extend({
 		isNearbyAndSoon: function(){
 			var minStartTime = new moment().subtract(30, 'minutes');
-			var maxStartTime = new moment().add(30, 'minutes');
+			var maxStartTime = new moment().add(4, 'hours');
 
 			if(maxStartTime.isBefore(this.get('startTime'))){
 				return false;
